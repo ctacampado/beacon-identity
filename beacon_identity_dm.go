@@ -53,6 +53,7 @@ type IdentityParams struct {
 	UserName     string `json:"UserName,omitempty"`
 	Password     string `json:"Password,omitempty"`
 	Name         string `json:"Name,omitempty"`
+	OrgName      string `json:"OrgName,omitempty"`
 	WalletAddr   string `json:"WalletAddr,omitempty"`
 	Email        string `json:"Email,omitempty"`
 	MobileNo     string `json:"MobileNo,omitempty"`
@@ -85,6 +86,7 @@ type Identity struct {
 	UserName     string `json:"UserName"`
 	Password     string `json:"Password"`
 	Name         string `json:"Name"`
+	OrgName      string `json:"OrgName"`
 	WalletAddr   string `json:"WalletAddr,omitempty"`
 	Email        string `json:"Email"`
 	MobileNo     string `json:"MobileNo,omitempty"`
