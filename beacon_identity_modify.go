@@ -12,29 +12,34 @@ func modifyIdentity(fargs CCFuncArgs) pb.Response {
 	log.Printf("starting modifyIdentity\n")
 
 	//get identity to be modified
-	var qparm = &IdentityParams{AID: fargs.req.AID}
-	qpbytes, err := json.Marshal(*qparm)
+	qparm := IdentityParams{AID: fargs.req.AID}
+
+	qpbytes, err := json.Marshal(qparm)
 	if err != nil {
 		log.Printf("[addIdentity] Could not marshal campaign info object: %+v\n", err)
 		return shim.Error(err.Error())
 	}
 
-	var qresp = &QRsp{}
-	qr := getIdentity(CCFuncArgs{req: Message{Params: string(qpbytes)}})
-	err = json.Unmarshal([]byte(qr.Payload), qresp)
+	var qresp = QRsp{}
+	qr := getIdentity(CCFuncArgs{stub: fargs.stub, req: Message{Params: string(qpbytes)}})
+	err = json.Unmarshal([]byte(qr.Payload), &qresp)
 	if err != nil {
-		return shim.Error("[getIdentity] Error unable to unmarshall msg: " + err.Error())
+		return shim.Error("[getIdentity] Error unable to unmarshall Payload: " + err.Error())
 	}
 
-	var id = &Identity{}
-	err = json.Unmarshal([]byte(qresp.Elem[0].Value), id)
+	id := Identity{}
+	err = json.Unmarshal([]byte(qresp.Elem[0].Value), &id)
 	if err != nil {
-		return shim.Error("[getIdentity] Error unable to unmarshall msg: " + err.Error())
+		return shim.Error("[getIdentity] Error unable to unmarshall Elem[0].Value: " + err.Error())
 	}
 
-	applyIdentityModsFromParam(qparm, id)
+	err = json.Unmarshal([]byte(fargs.req.Params), &qparm)
+	if err != nil {
+		return shim.Error("[getIdentity] Error unable to unmarshall Params: " + err.Error())
+	}
+	applyIdentityModsFromParam(&qparm, &id)
 
-	apbytes, err := json.Marshal(*id)
+	apbytes, err := json.Marshal(id)
 	if err != nil {
 		log.Printf("[addIdentity] Could not marshal campaign info object: %+v\n", err)
 		return shim.Error(err.Error())

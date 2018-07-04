@@ -58,9 +58,9 @@ type IdentityParams struct {
 	Email        string `json:"Email,omitempty"`
 	MobileNo     string `json:"MobileNo,omitempty"`
 	Description  string `json:"Description,omitempty"`
-	ApprvlStatus string `json:"ApprvlStatus, omitempty"`
-	Surname      string `json:"Surname, omitempty"`
-	MMN          string `json:"MMN, omitempty"`
+	ApprvlStatus string `json:"ApprvlStatus,omitempty"`
+	Surname      string `json:"Surname,omitempty"`
+	MMN          string `json:"MMN,omitempty"`
 }
 
 //IdentityParamSelector Structure for Query Selector
@@ -71,6 +71,12 @@ type IdentityParamSelector struct {
 //End of Query Paramter Structures
 //--------------------------------------------------------------------------
 //Start adding Data Models here
+
+/****Identity Types
+   CO
+	 Donor
+	 Auditor
+****/
 
 /****Approval Status
 	NEW - newly added identity
@@ -92,8 +98,8 @@ type Identity struct {
 	MobileNo     string `json:"MobileNo,omitempty"`
 	ApprvlStatus string `json:"ApprvlStatus"`
 	Description  string `json:"Description,omitempty"`
-	Surname      string `json:"Surname, omitempty"`
-	MMN          string `json:"MMN, omitempty"`
+	Surname      string `json:"Surname,omitempty"`
+	MMN          string `json:"MMN,omitempty"`
 }
 
 //End of Data Models

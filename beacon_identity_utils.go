@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 )
 
 func createQueryString(params *IdentityParams) (qstring string, err error) {
@@ -18,6 +19,8 @@ func createQueryString(params *IdentityParams) (qstring string, err error) {
 }
 
 func applyIdentityModsFromParam(src *IdentityParams, dest *Identity) {
+	log.Printf("[applyIdentityModsFromParam]: src \n%+v\n", src)
+	log.Printf("[applyIdentityModsFromParam]: dest \n%+v\n", dest)
 	if "" != src.AID {
 		dest.AID = src.AID
 	}

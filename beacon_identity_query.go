@@ -9,19 +9,19 @@ import (
 )
 
 func getIdentity(fargs CCFuncArgs) pb.Response {
-	log.Println("starting getIdentity")
+	log.Println("[getIdentity]starting getIdentity")
 
 	var qparams = &IdentityParams{}
 	err := json.Unmarshal([]byte(fargs.req.Params), qparams)
 	if err != nil {
 		return shim.Error("[getIdentity] Error unable to unmarshall msg: " + err.Error())
 	}
-
+	log.Printf("[getIdentity] creating query string")
 	qstring, err := createQueryString(qparams)
 	if err != nil {
 		return shim.Error("[getIdentity] Error unable to create query string: " + err.Error())
 	}
-
+	log.Printf("[getIdentity] query using querystring: %+v\n", qparams)
 	resultsIterator, err := fargs.stub.GetQueryResult(qstring)
 	log.Printf("- getQueryResultForQueryString resultsIterator:\n%+v\n", resultsIterator)
 	defer resultsIterator.Close()
