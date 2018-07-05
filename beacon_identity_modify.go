@@ -12,9 +12,14 @@ func modifyIdentity(fargs CCFuncArgs) pb.Response {
 	log.Printf("starting modifyIdentity\n")
 
 	//get identity to be modified
-	qparm := IdentityParams{AID: fargs.req.AID}
+	qparm := IdentityParams{}
+	err := json.Unmarshal([]byte(fargs.req.Params), &qparm)
+	if err != nil {
+		return shim.Error("[getIdentity] Error unable to unmarshall Params: " + err.Error())
+	}
 
-	qpbytes, err := json.Marshal(qparm)
+	qp := IdentityParams{AID: qparm.AID}
+	qpbytes, err := json.Marshal(qp)
 	if err != nil {
 		log.Printf("[addIdentity] Could not marshal campaign info object: %+v\n", err)
 		return shim.Error(err.Error())
@@ -33,10 +38,6 @@ func modifyIdentity(fargs CCFuncArgs) pb.Response {
 		return shim.Error("[getIdentity] Error unable to unmarshall Elem[0].Value: " + err.Error())
 	}
 
-	err = json.Unmarshal([]byte(fargs.req.Params), &qparm)
-	if err != nil {
-		return shim.Error("[getIdentity] Error unable to unmarshall Params: " + err.Error())
-	}
 	applyIdentityModsFromParam(&qparm, &id)
 
 	apbytes, err := json.Marshal(id)

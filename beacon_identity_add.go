@@ -22,7 +22,7 @@ func addIdentity(fargs CCFuncArgs) pb.Response {
 		return shim.Error("[addIdentity] Error unable to unmarshall msg: " + err.Error())
 	}
 
-	log.Printf("[addIdentity ] campaign info: %+v\n", id)
+	log.Printf("[addIdentity ] identity info: %+v\n", id)
 
 	bytes, err := json.Marshal(id)
 	if err != nil {
