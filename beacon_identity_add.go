@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"log"
+	"time"
 
 	shim "github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
@@ -15,9 +16,9 @@ func addIdentity(fargs CCFuncArgs) pb.Response {
 	u := uuid.Must(uuid.NewV4())
 	var ustr = u.String()
 
-	id := Identity{AID: ustr, ApprvlStatus: "NEW"}
+	id := Identity{AID: ustr, ApprvlStatus: "NEW", DateCreated: string(time.Now().Format("2006-Jan-02"))}
 
-	err := json.Unmarshal([]byte(fargs.req.Params), &id)
+	err := json.Unmarshal([]byte(fargs.msg.Params), &id)
 	if err != nil {
 		return shim.Error("[addIdentity] Error unable to unmarshall msg: " + err.Error())
 	}
@@ -35,7 +36,15 @@ func addIdentity(fargs CCFuncArgs) pb.Response {
 		log.Printf("[addIdentity] Error storing data in the ledger %+v\n", err)
 		return shim.Error(err.Error())
 	}
-
+	fargs.msg.Data = string(bytes)
+	log.Printf("fargs: %+v\n", fargs.msg)
+	rspbytes, err := json.Marshal(fargs.msg)
+	if err != nil {
+		log.Printf("[addCampaign] Could not marshal fargs object: %+v\n", err)
+		return shim.Error(err.Error())
+	}
+	fargs.stub.SetEvent("newidentity", rspbytes)
+	log.Printf("rspbytes: %+v\n", rspbytes)
 	log.Println("- end addIdentity")
-	return shim.Success(bytes) //change nil to appropriate response
+	return shim.Success(rspbytes) //change nil to appropriate response
 }
