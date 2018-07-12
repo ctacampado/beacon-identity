@@ -61,6 +61,7 @@ type IdentityParams struct {
 	ApprvlStatus string `json:"ApprvlStatus,omitempty"`
 	Surname      string `json:"Surname,omitempty"`
 	MMN          string `json:"MMN,omitempty"`
+	CoinsAPIKey  string `json:"CoinsAPIKey,omitempty"`
 }
 
 //IdentityParamSelector Structure for Query Selector
@@ -100,6 +101,7 @@ type Identity struct {
 	Description  string `json:"Description,omitempty"`
 	Surname      string `json:"Surname,omitempty"`
 	MMN          string `json:"MMN,omitempty"`
+	CoinsAPIKey  string `json:"CoinsAPIKey,omitempty"`
 }
 
 //End of Data Models
