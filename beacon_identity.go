@@ -36,7 +36,7 @@ func (t *Chaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	}
 
 	if t.FMap[function] != nil {
-		fargs := CCFuncArgs{function: function, req: t.Msg, stub: stub}
+		fargs := CCFuncArgs{function: function, msg: t.Msg, stub: stub}
 		return t.FMap[function](fargs)
 	}
 

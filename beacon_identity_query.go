@@ -12,7 +12,7 @@ func getIdentity(fargs CCFuncArgs) pb.Response {
 	log.Println("[getIdentity]starting getIdentity")
 
 	var qparams = &IdentityParams{}
-	err := json.Unmarshal([]byte(fargs.req.Params), qparams)
+	err := json.Unmarshal([]byte(fargs.msg.Params), qparams)
 	if err != nil {
 		return shim.Error("[getIdentity] Error unable to unmarshall msg: " + err.Error())
 	}
@@ -35,8 +35,19 @@ func getIdentity(fargs CCFuncArgs) pb.Response {
 		if err != nil {
 			return shim.Error("[getIdentity] Error unable to get next item in iterator: " + err.Error())
 		}
-
-		q := QRes{Key: queryResponse.Key, Value: string(queryResponse.Value)}
+		var val = Identity{}
+		err = json.Unmarshal(queryResponse.Value, &val)
+		if err != nil {
+		    return shim.Error("[getIdentity] Error unable to unmarshal value: " + err.Error())
+		}
+		if fargs.function != "modifyIdentity" {
+		    val.Password = "*****"
+		}
+		vbytes, err := json.Marshal(val)
+		if err != nil {
+		    return shim.Error("[getIdentity] Error unable to marshal value: " + err.Error())
+		}
+		q := QRes{Key: queryResponse.Key, Value: string(vbytes)}
 		qresp.Elem = append(qresp.Elem, q)
 	}
 

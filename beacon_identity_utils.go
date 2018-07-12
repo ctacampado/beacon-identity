@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 )
 
 func createQueryString(params *IdentityParams) (qstring string, err error) {
@@ -57,4 +58,5 @@ func applyIdentityModsFromParam(src *IdentityParams, dest *Identity) {
 	if "" != src.MMN {
 		dest.MMN = src.MMN
 	}
+	dest.LastModified = string(time.Now().Format("2006-Jan-02"))
 }

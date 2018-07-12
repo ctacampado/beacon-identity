@@ -13,7 +13,7 @@ func modifyIdentity(fargs CCFuncArgs) pb.Response {
 
 	//get identity to be modified
 	qparm := IdentityParams{}
-	err := json.Unmarshal([]byte(fargs.req.Params), &qparm)
+	err := json.Unmarshal([]byte(fargs.msg.Params), &qparm)
 	if err != nil {
 		return shim.Error("[getIdentity] Error unable to unmarshall Params: " + err.Error())
 	}
@@ -26,7 +26,7 @@ func modifyIdentity(fargs CCFuncArgs) pb.Response {
 	}
 
 	var qresp = QRsp{}
-	qr := getIdentity(CCFuncArgs{stub: fargs.stub, req: Message{Params: string(qpbytes)}})
+	qr := getIdentity(CCFuncArgs{function: "modifyIdentity", stub: fargs.stub, msg: Message{Params: string(qpbytes)}})
 	err = json.Unmarshal([]byte(qr.Payload), &qresp)
 	if err != nil {
 		return shim.Error("[getIdentity] Error unable to unmarshall Payload: " + err.Error())
@@ -52,5 +52,14 @@ func modifyIdentity(fargs CCFuncArgs) pb.Response {
 		return shim.Error(err.Error())
 	}
 
-	return shim.Success(nil) //change nil to appropriate response
+	fargs.msg.Data = string(apbytes)
+	rspbytes, err := json.Marshal(fargs.msg)
+	if err != nil {
+		log.Printf("[addIdentity] Error msg JSON marshal%+v\n", err)
+		return shim.Error(err.Error())
+	}
+	log.Printf("- end modifyIdentity")
+	fargs.stub.SetEvent("modidentity", rspbytes)
+	log.Printf("rspbytes: %+v\n", rspbytes)
+	return shim.Success(rspbytes) //change nil to appropriate response
 }
